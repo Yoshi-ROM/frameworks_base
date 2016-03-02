@@ -131,8 +131,7 @@ public class PlatLogoActivity extends Activity {
         im.setTranslationZ(20);
         im.setScaleX(0);
         im.setScaleY(0);
-        final Drawable platlogo = getDrawable(
-                com.android.internal.R.drawable.slim_platlogo);
+        final Drawable platlogo = getDrawable(com.android.internal.R.drawable.platlogo);
         platlogo.setAlpha(0);
         im.setImageDrawable(platlogo);
         im.setBackground(makeRipple());
