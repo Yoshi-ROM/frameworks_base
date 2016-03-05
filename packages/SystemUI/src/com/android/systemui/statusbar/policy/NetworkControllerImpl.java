@@ -19,6 +19,7 @@
 
 package com.android.systemui.statusbar.policy;
 
+import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -2007,4 +2008,14 @@ public class NetworkControllerImpl extends BroadcastReceiver
             }
         }
     }
+
+    /**
+     * Check if secondary and long click action should be swapped accordingly to the settings
+     */
+    public boolean isSwapSecondaryLongClickEnabled() {
+        return Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                Settings.Secure.QS_CELLULAR_SWAP_SECONDARY_LONG_CLICK, 0,
+                ActivityManager.getCurrentUser()) == 1;
+    }
+
 }

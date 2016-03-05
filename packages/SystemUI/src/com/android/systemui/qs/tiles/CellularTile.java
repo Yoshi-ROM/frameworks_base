@@ -94,6 +94,20 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
 
     @Override
     protected void handleSecondaryClick() {
+        handleSecondaryClick(false);
+    }
+
+    @Override
+    protected void handleLongClick() {
+        handleLongClick(false);
+    }
+
+    protected void handleSecondaryClick(boolean force) {
+        if (!force && mController.isSwapSecondaryLongClickEnabled()) {
+            handleLongClick(true);
+            return;
+        }
+
         if (mController.isMobileDataSupported()) {
             showDetail(true);
         } else {
@@ -105,8 +119,12 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
         }
     }
 
-    @Override
-    protected void handleLongClick() {
+    protected void handleLongClick(boolean force) {
+        if (!force && mController.isSwapSecondaryLongClickEnabled()) {
+            handleSecondaryClick(true);
+            return;
+        }
+
         if (mTelephonyManager.getDefault().getPhoneCount() > 1) {
             mHost.startSettingsActivity(MOBILE_NETWORK_SETTINGS_MSIM);
         } else {

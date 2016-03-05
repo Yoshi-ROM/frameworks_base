@@ -6380,6 +6380,14 @@ public final class Settings {
         public static final String QS_LOCATION_ADVANCED = "qs_location_advanced";
 
         /**
+         * Whether to swap the secondary and long click actions of the cellular tile
+         * @hide
+         */
+        public static final String QS_CELLULAR_SWAP_SECONDARY_LONG_CLICK =
+                "qs_cellular_swap_secondary_long_click";
+
+
+        /**
          * Whether to show four tiles per row.
          * @hide
          */

@@ -99,4 +99,7 @@ public interface NetworkController {
         public long warningLevel;
         public long usageLevel;
     }
+
+    boolean isSwapSecondaryLongClickEnabled();
+
 }
