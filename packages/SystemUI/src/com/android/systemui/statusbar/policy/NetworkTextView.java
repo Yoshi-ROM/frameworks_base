@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.UserHandle;
@@ -52,6 +54,7 @@ public class NetworkTextView extends TextView implements Observer {
     private int GB = MB*KB;
     private boolean mAutoHide;
     private int mAutoHideThreshold;
+    private int mNetworkTrafficArrowColor;
 
     /**
      * @hide
@@ -194,6 +197,10 @@ public class NetworkTextView extends TextView implements Observer {
 
         mState = Settings.System.getInt(resolver, Settings.System.NETWORK_TRAFFIC_VECTOR_STATE, 0);
 
+        final Resources resources = getResources();
+        setTextColor(resources.getColor(R.color.network_text_text));
+        mNetworkTrafficArrowColor = resources.getColor(R.color.network_text_arrows);
+
         if (NetworkTrafficSettings.hasMask(mState, NetworkTrafficSettings.UNIT_SWITCH_MASK)) {
             KB = KILOBYTE;
         } else {
@@ -233,6 +240,7 @@ public class NetworkTextView extends TextView implements Observer {
         boolean downTraffic = NetworkTrafficSettings.isDownTrafficDisplayed(mState);
         // Compute drawable
         final int intTrafficDrawable;
+        Drawable drw = null;
         if (upTraffic&&downTraffic) {
             intTrafficDrawable = R.drawable.stat_sys_network_traffic_updown;
         } else if (upTraffic) {
@@ -243,7 +251,11 @@ public class NetworkTextView extends TextView implements Observer {
             intTrafficDrawable = 0;
         }
         // Apply drawable
-        setCompoundDrawablesWithIntrinsicBounds(0, 0, intTrafficDrawable, 0);
+        if (intTrafficDrawable != 0) {
+            drw = getContext().getResources().getDrawable(intTrafficDrawable);
+            drw.setColorFilter(mNetworkTrafficArrowColor, PorterDuff.Mode.SRC_ATOP);
+        }
+        setCompoundDrawablesWithIntrinsicBounds(null, null, drw, null);
     }
 
     private boolean shouldHide(long inSpeed, long outSpeed, boolean upTraffic, boolean downTraffic) {

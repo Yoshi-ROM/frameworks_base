@@ -20,9 +20,9 @@ Copyright (C) 2014 The Android Open Source Project
         android:viewportWidth="32.0"
         android:viewportHeight="24.0">
     <path
-            android:fillColor="#FFFFFFFF"
+            android:fillColor="@color/network_meter_primary"
             android:pathData="M 23,2.625 C 10.92221,4.8446267 2,12.680195 2,22 l 21,0 0,-19.375 z"/>
     <path
-            android:fillColor="#4DFFFFFF"
+            android:fillColor="@color/network_meter_secondary"
             android:pathData="M 30 2 C 14.536027 2 2 10.954305 2 22 L 30 22 L 30 2 z"/>
 </vector>

@@ -46,4 +46,10 @@
     <color name="navring_edit_fill">#FF558B2F</color>
     <color name="navring_edit_tint">#FF689F38</color>
 
+    <!-- Network meter -->
+    <color name="network_meter_primary">#ffffffff</color>
+    <color name="network_meter_secondary">#4dffffff</color>
+    <color name="network_text_text">#ffffffff</color>
+    <color name="network_text_arrows">@color/network_text_text</color>
+
 </resources>
