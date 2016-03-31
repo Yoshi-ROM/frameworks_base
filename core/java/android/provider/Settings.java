@@ -3731,6 +3731,33 @@ public final class Settings {
         public static final String STATUS_BAR_SHOW_NETWORK_ACTIVITY = "status_bar_show_network_activity";
 
         /**
+         * Network traffic indicator, goes from least to greatest significant bitwise
+         * 0 = Display traffic as meter if set
+         * 1 = Display traffic as text if set
+         * 2 = Display up-stream traffic if set
+         * 3 = Display down-stream traffic if set
+         * 4 = Show as Byte/s if set
+         * 16-31 = Refresh interval(ms) min: 250 max: 32750 default: 1000
+         *
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_VECTOR_STATE = "network_traffic_vector_state";
+
+        /**
+         * Whether or not to hide the network traffic indicator when there is no activity
+         *
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_VECTOR_AUTOHIDE = "network_traffic_vector_autohide";
+
+        /**
+         * Network traffic inactivity threshold (default is 10 kBs)
+         *
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_VECTOR_AUTOHIDE_THRESHOLD = "network_traffic_vector_autohide_threshold";
+
+        /**
          * Whether to use slim recents
          * @hide
          */
