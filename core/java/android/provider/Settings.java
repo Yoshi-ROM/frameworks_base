@@ -3758,6 +3758,12 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_VECTOR_AUTOHIDE_THRESHOLD = "network_traffic_vector_autohide_threshold";
 
         /**
+         * Switch for headset icon
+         * @hide
+         */
+        public static final String SHOW_HEADSET_ICON = "show_headset_icon";
+
+        /**
          * Whether to use slim recents
          * @hide
          */
