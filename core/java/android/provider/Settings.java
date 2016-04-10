@@ -3199,6 +3199,16 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String STATUSBAR_BATTERY_BAR_CHARGING_COLOR = "statusbar_battery_bar_charging_color";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR_BATTERY_LOW_COLOR = "statusbar_battery_bar_battery_low_color";
+
+        /**
+         * @hide
+         */
         public static final String STATUSBAR_BATTERY_BAR_THICKNESS = "statusbar_battery_bar_thickness";
 
         /**
@@ -6444,7 +6454,6 @@ public final class Settings {
          */
         public static final String QS_CELLULAR_SWAP_SECONDARY_LONG_CLICK =
                 "qs_cellular_swap_secondary_long_click";
-
 
         /**
          * Whether to show four tiles per row.
