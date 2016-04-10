@@ -6456,6 +6456,12 @@ public final class Settings {
                 "qs_cellular_swap_secondary_long_click";
 
         /**
+         * Whether to skip the zen mode settings when clicking on the notification tile
+         * @hide
+         */
+        public static final String QS_NOTIFICATION_SKIP_ZEN_MODE = "qs_notification_skip_zen_mode";
+
+        /**
          * Whether to show four tiles per row.
          * @hide
          */

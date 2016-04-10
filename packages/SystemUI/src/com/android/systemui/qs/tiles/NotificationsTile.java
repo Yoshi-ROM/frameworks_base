@@ -30,6 +30,7 @@
 package com.android.systemui.qs.tiles;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.view.View.OnAttachStateChangeListener;
 import android.view.ViewGroup;
 import android.os.Vibrator;
+import android.provider.Settings;
 
 import com.android.systemui.R;
 import com.android.systemui.qs.QSTile;
@@ -105,10 +107,13 @@ public class NotificationsTile extends QSTile<NotificationsTile.NotificationsSta
 
     @Override
     protected void handleClick() {
-        mRingerIndex++;
-        if (mRingerIndex >= RINGERS.length) {
-            mRingerIndex = 0;
-        }
+        boolean skipZenMode = isSkipZenModeEnabled();
+        do {
+            mRingerIndex++;
+            if (mRingerIndex >= RINGERS.length) {
+                mRingerIndex = 0;
+            }
+        } while(skipZenMode && ZENS[mRingerIndex] != Global.ZEN_MODE_OFF);
         int ringerMode = RINGERS[mRingerIndex];
         int zenMode = ZENS[mRingerIndex];
 
@@ -160,6 +165,12 @@ public class NotificationsTile extends QSTile<NotificationsTile.NotificationsSta
             retValue = R.drawable.ic_qs_ringer_silent;
         }
         return retValue;
+    }
+
+    private boolean isSkipZenModeEnabled() {
+        ContentResolver resolver = mContext.getContentResolver();
+        return Settings.Secure.getInt(resolver,
+                Settings.Secure.QS_NOTIFICATION_SKIP_ZEN_MODE, 0) == 1;
     }
 
     private final ZenModeController.Callback mCallback = new ZenModeController.Callback() {
