@@ -30,11 +30,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Handler;
+import android.os.Parcel;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.android.systemui.R;
 
@@ -59,24 +62,43 @@ public class SuControllerImpl implements SuController {
     private boolean mHasActiveSuSessions;
 
     private Notification.Builder mBuilder;
+    private Notification.Builder mOngoingBuilder;
     private NotificationManager mNotificationManager;
+
+    private Toast mToast;
 
     private static final int SU_INDICATOR_NOTIFICATION_ID = 0x101101;
 
-    public static final int SU_INDICATOR_NONE         = 0;
-    public static final int SU_INDICATOR_ICON         = 1;
-    public static final int SU_INDICATOR_NOTIFICATION = 2;
+    public static final int SU_INDICATOR_NONE                  = 0;
+    public static final int SU_INDICATOR_ICON                  = 1;
+    public static final int SU_INDICATOR_NOTIFICATION          = 2;
+    public static final int SU_INDICATOR_NOTIFICATION_ONGOING  = 3;
+    public static final int SU_INDICATOR_TOAST                 = 4;
 
     public SuControllerImpl(Context context) {
         mContext = context;
 
         mAppOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
 
+        String contentTitle = mContext.getString(R.string.su_session_active);
+        String contentText = getActivePackageNames();
+        String tickerText = getTickerText();
         mBuilder = new Notification.Builder(mContext)
             .setUsesChronometer(true)
             .setSmallIcon(R.drawable.stat_sys_su)
-            .setContentTitle(mContext.getString(R.string.su_session_active))
-            .setContentText(getActivePackageNames());
+            .setContentTitle(contentTitle)
+            .setContentText(contentText);
+
+        mOngoingBuilder = new Notification.Builder(mContext)
+            .setUsesChronometer(true)
+            .setSmallIcon(R.drawable.stat_sys_su)
+            .setContentTitle(contentTitle)
+            .setContentText(contentText)
+            .setTicker(tickerText)
+            .setOngoing(true)
+            .setPriority(Notification.PRIORITY_MIN);
+
+        mToast = Toast.makeText(mContext, tickerText, Toast.LENGTH_SHORT);
 
         mNotificationManager =
             (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -188,20 +210,38 @@ public class SuControllerImpl implements SuController {
         return Arrays.toString(pacs.toArray(new String[pacs.size()]));
     }
 
+    private String getTickerText() {
+        return mContext.getString(R.string.su_session_active) + "\n" +
+                getActivePackageNames().replace("[", "").replace("]", "");
+    }
+
     public void updateNotification() {
         if (!hasActiveSuSessions()) {
             mNotificationManager.cancel(SU_INDICATOR_NOTIFICATION_ID);
             return;
         }
-        if (Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.SU_INDICATOR, 1, UserHandle.USER_CURRENT)
-                != SU_INDICATOR_NOTIFICATION) {
+        int setting = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.SU_INDICATOR, 1, UserHandle.USER_CURRENT);
+        if (setting == SU_INDICATOR_NOTIFICATION) {
+            String content = getActivePackageNames().replace("[", "").replace("]", "");
+            mBuilder.setContentText(content);
+            mNotificationManager.notify(SU_INDICATOR_NOTIFICATION_ID, mBuilder.build());
+        } else if (setting == SU_INDICATOR_NOTIFICATION_ONGOING) {
+            String content = getActivePackageNames().replace("[", "").replace("]", "");
+            mOngoingBuilder.setContentText(content);
+            mOngoingBuilder.setTicker(getTickerText());
+            Notification notification = mOngoingBuilder.build();
+            //Disable heads up
+            notification.headsUpContentView = new RemoteViews(Parcel.obtain());
+            mNotificationManager.notify(SU_INDICATOR_NOTIFICATION_ID, notification);
+        } else {
             mNotificationManager.cancel(SU_INDICATOR_NOTIFICATION_ID);
+            if (setting == SU_INDICATOR_TOAST) {
+                mToast.setText(getTickerText());
+                mToast.show();
+            }
             return;
         }
-        String content = getActivePackageNames().replace("[", "").replace("]", "");
-        mBuilder.setContentText(content);
-        mNotificationManager.notify(SU_INDICATOR_NOTIFICATION_ID, mBuilder.build());
     }
 
     private void updateActiveSuSessions() {
