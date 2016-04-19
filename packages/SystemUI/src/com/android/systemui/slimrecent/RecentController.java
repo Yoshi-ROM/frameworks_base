@@ -590,6 +590,9 @@ public class RecentController implements RecentPanelView.OnExitListener,
                     Settings.System.RECENT_SHOW_RUNNING_TASKS),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.USE_RECENT_APP_SIDEBAR),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.RECENT_APP_SIDEBAR_CONTENT),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -656,9 +659,14 @@ public class RecentController implements RecentPanelView.OnExitListener,
             }
 
             // App sidebar settings
-            String appSidebarContent = Settings.System.getStringForUser(
-                    resolver, Settings.System.RECENT_APP_SIDEBAR_CONTENT, UserHandle.USER_CURRENT);
-            mAppSidebarEnabled = appSidebarContent != null && !appSidebarContent.equals("");
+            if (Settings.System.getIntForUser(resolver, Settings.System.USE_RECENT_APP_SIDEBAR, 1,
+                    UserHandle.USER_CURRENT) == 1) {
+                String appSidebarContent = Settings.System.getStringForUser(resolver,
+                        Settings.System.RECENT_APP_SIDEBAR_CONTENT, UserHandle.USER_CURRENT);
+                mAppSidebarEnabled = appSidebarContent != null && !appSidebarContent.equals("");
+            } else {
+                mAppSidebarEnabled = false;
+            }
             mAppSidebarScaleFactor = Settings.System.getIntForUser(
                     resolver, Settings.System.RECENT_APP_SIDEBAR_SCALE_FACTOR, 100,
                     UserHandle.USER_CURRENT) / 100.0f;
