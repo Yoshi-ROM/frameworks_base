@@ -90,6 +90,16 @@ public class PermissionDialog extends BasePermissionDialog {
             com.android.internal.R.id.permission_text);
         mChoice = (CheckBox) mView.findViewById(
             com.android.internal.R.id.permission_remember_choice_checkbox);
+        TextView choiceTextView = (TextView) mView.findViewById(
+            com.android.internal.R.id.permission_remember_choice_text);
+        choiceTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mChoice.toggle();
+                    }
+                }
+        );
         String name = getAppName(mPackageName);
         if(name == null)
             name = mPackageName;
