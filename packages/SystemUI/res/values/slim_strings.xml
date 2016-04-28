@@ -149,4 +149,7 @@
     <!-- No interuptions except alarms -->
     <string name="zen_no_interruptions_but_alarm">No interruptions. Except alarms.</string>
 
+    <!-- Queue app from slim recents app sidebar to open after slim recents closed -->
+    <string name="toast_recents_queue_app">Queue %s to open after closing recents</string>
+    <string name="toast_recents_cancel_queued_app">Canceled queued app</string>
 </resources>

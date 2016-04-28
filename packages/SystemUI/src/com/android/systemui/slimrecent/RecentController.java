@@ -849,6 +849,7 @@ public class RecentController implements RecentPanelView.OnExitListener,
     }
     private void removeSidebarView() {
         if (mAppSidebar != null) {
+            mAppSidebar.launchPendingSwipeAction();
             mWindowManager.removeView(mAppSidebar);
             mAppSidebar = null;
         }
@@ -857,6 +858,12 @@ public class RecentController implements RecentPanelView.OnExitListener,
         if (mAppSidebar != null) {
             mWindowManager.removeViewImmediate(mAppSidebar);
             mAppSidebar = null;
+        }
+    }
+
+    public void onLaunchApplication() {
+        if (mAppSidebar != null) {
+            mAppSidebar.cancelPendingSwipeAction();
         }
     }
 }
